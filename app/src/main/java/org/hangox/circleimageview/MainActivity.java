@@ -2,35 +2,49 @@ package org.hangox.circleimageview;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.ImageView;
+import android.widget.GridView;
 
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import auggie.library.displayers.CircleBitmapDisplayer;
+import auggie.library.displayers.ScaleRoundedBitmapDisplayer;
+import butterknife.ButterKnife;
 
 
 public class MainActivity extends ActionBarActivity {
-    ImageView iViewCircleImageDisplayer;
-    String imageUrl = "http://d.hiphotos.baidu" +
-            ".com/image/pic/item/9358d109b3de9c8242a7de176e81800a18d84363.jpg";
+    @ViewInject(R.id.imageList)
+    GridView gViewImage;
+
+    List<DisplayImageOptions> imageOptionsList = new ArrayList<>(10);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        iViewCircleImageDisplayer = (ImageView) findViewById(R.id.circle_image_displayer);
-        ImageLoader.getInstance().displayImage(imageUrl,iViewCircleImageDisplayer,options);
-//        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.test_personal);
-//        iViewCircleImageDisplayer.setImageDrawable(new CircleDrawable(bitmapDrawable.getBitmap()));
+        ButterKnife.inject(this);
+        setUpOption();
+    }
+
+    private void setUpOption(){
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        imageOptionsList.add(new DisplayImageOptions.Builder().cloneFrom(options).displayer(new
+                CircleBitmapDisplayer()).build());
+        imageOptionsList.add(new DisplayImageOptions.Builder().cloneFrom(options).displayer(new
+                ScaleRoundedBitmapDisplayer(8)).build());
+
     }
 
 
 
-    DisplayImageOptions options = new DisplayImageOptions.Builder()
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .displayer(new CircleBitmapDisplayer())
-            .build();
+
+
 
 
 }
